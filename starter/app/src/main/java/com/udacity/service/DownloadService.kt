@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import com.udacity.BaseService
+import com.udacity.base.BaseService
 import com.udacity.Constants
 import com.udacity.R
 import com.udacity.impl.DownloadImpl

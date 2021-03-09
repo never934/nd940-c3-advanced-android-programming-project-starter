@@ -1,4 +1,4 @@
-package com.udacity
+package com.udacity.base
 
 import android.app.Service
 import kotlinx.coroutines.CoroutineScope

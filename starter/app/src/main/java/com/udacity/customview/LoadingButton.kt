@@ -1,4 +1,4 @@
-package com.udacity
+package com.udacity.customview
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.udacity.R
 import kotlin.math.min
 import kotlin.properties.Delegates
 
