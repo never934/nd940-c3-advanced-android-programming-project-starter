@@ -1,72 +1,78 @@
 package com.udacity
 
-import android.app.DownloadManager
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.Uri
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
+import com.udacity.impl.DownloadImpl
+import com.udacity.service.DownloadService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+class MainActivity : AppCompatActivity(), DownloadImpl {
 
-class MainActivity : AppCompatActivity() {
+    private var boundDownloadService = false
+    private var downloadService: DownloadService? = null
 
-    private var downloadID: Long = 0
-
-    private lateinit var notificationManager: NotificationManager
-    private lateinit var pendingIntent: PendingIntent
-    private lateinit var action: NotificationCompat.Action
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-
         custom_button.setOnClickListener {
             download()
         }
     }
 
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+    override fun onStart() {
+        super.onStart()
+        bindService(Intent(this, DownloadService::class.java), downloadServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (boundDownloadService) {
+            downloadService?.setCallback(this)
+            unbindService(downloadServiceConnection)
+            boundDownloadService = false
         }
     }
 
-    private fun download() {
-        val request =
-            DownloadManager.Request(Uri.parse(URL))
-                .setTitle(getString(R.string.app_name))
-                .setDescription(getString(R.string.app_description))
-                .setRequiresCharging(false)
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
-
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        downloadID =
-            downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+    override fun downloaded(percents: Int) {
+        custom_button.setProgress(percents)
     }
 
-    private fun setProgressButton(progress: Int){
-        custom_button.setProgress(progress)
+    private fun download() {
+        val videosIntent = Intent(this, DownloadService::class.java)
+        videosIntent.putExtra(Constants.KEY_URL, URL)
+        startService(videosIntent)
+    }
+
+    private val downloadServiceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(
+            className: ComponentName,
+            service: IBinder
+        ) {
+            val binder = service as DownloadService.DownloadBinder
+            downloadService = binder.getService()
+            boundDownloadService = true
+            downloadService?.setCallback(this@MainActivity)
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            boundDownloadService = false
+        }
     }
 
     companion object {
         private const val URL =
-            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+            "https://r4---sn-aigzrn7k.googlevideo.com/videoplayback?expire=1615335293&ei=HbtHYPT3JoWC0wX-oL8Y&ip=37.120.133.133&id=o-ALUTE91UTRYwXHXw6Q8AsDTZpmbP1-oiHDmLq758ktw5&itag=22&source=youtube&requiressl=yes&mh=eN&mm=31%2C26&mn=sn-aigzrn7k%2Csn-4g5e6nzz&ms=au%2Conr&mv=m&mvi=4&pl=24&initcwndbps=781250&vprv=1&mime=video%2Fmp4&ns=PwhELgK7xaHBIlS2NvFGai8F&cnr=14&ratebypass=yes&dur=1740.056&lmt=1614872273143931&mt=1615313325&fvip=4&fexp=24001373%2C24007246&beids=9466585&c=WEB&txp=5535432&n=OGLR8M_MOHPVda1y&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAIK5Jpcm5mFHj_kXxh4NFZ7hMz8SfW6CxDBrAlCTV3GBAiEA2vDLtv1YxjXwGlux9JSlyz_zIFVnaCSQWOEKXapH0oI%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAOJmCRjFU9X086AV3pZr-NCjU3M8I-UMa6wWCQEjLYzfAiEA7ZQlSwT4MfeFIi1WgZXRuA9brJosPnzIAf27jSj69mY%3D&title=Переделали%20такси%20в%20E63s%20AMG"
         private const val CHANNEL_ID = "channelId"
     }
+
 
 }
