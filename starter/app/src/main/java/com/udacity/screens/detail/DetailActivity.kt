@@ -1,8 +1,10 @@
 package com.udacity.screens.detail
 
+import android.app.NotificationManager
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.udacity.Constants
@@ -19,6 +21,7 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        cancelNotifications()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         binding.lifecycleOwner = this
         setSupportActionBar(binding.toolbar)
@@ -28,4 +31,14 @@ class DetailActivity : AppCompatActivity() {
         }
         okButton.setOnClickListener { finish() }
     }
+
+    private fun cancelNotifications() {
+        val notificationManager = ContextCompat.getSystemService(
+            this,
+            NotificationManager::class.java
+        ) as NotificationManager
+        notificationManager.cancelAll()
+    }
+
+
 }

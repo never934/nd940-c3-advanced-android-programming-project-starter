@@ -33,5 +33,6 @@
     <string name="course_url">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter</string>
     <string name="retrofit_url">https://github.com/square/retrofit</string>
     <string name="glide_url">https://github.com/bumptech/glide</string>
+    <string name="show">Show</string>
 
 </resources>

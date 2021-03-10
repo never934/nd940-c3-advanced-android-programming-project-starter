@@ -36,6 +36,7 @@ fun NotificationManager.sendNotification(downloadView: DownloadView, application
         .setContentTitle(applicationContext.getString(R.string.notification_title))
         .setContentText("id: ${downloadView.downloadId}\nstatus changed")
         .setContentIntent(contentPendingIntent)
+        .addAction(R.drawable.ic_arrow_forward_24, App.androidComponent.context.getString(R.string.show), contentPendingIntent)
         .setAutoCancel(true)
     notify(NOTIFICATION_ID, builder.build())
 }
