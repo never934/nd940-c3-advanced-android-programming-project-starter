@@ -10,9 +10,9 @@ import kotlinx.android.parcel.Parcelize
 data class DownloadDB(
     @PrimaryKey
     val id: String,
-    val downloadId: String,
+    val downloadId: Long,
     val downloadUrl: String,
-    val downloaded: Boolean,
+    var downloaded: Boolean?,
     val createdDate: Long,
-    val updatedDate: Long,
+    var updatedDate: Long,
 ) : Parcelable

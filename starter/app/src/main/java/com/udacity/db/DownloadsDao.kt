@@ -6,7 +6,7 @@ import com.udacity.db.entity.DownloadDB
 
 @Dao
 interface DownloadsDao {
-    @Query("select * from downloaddb order by updatedDate asc")
+    @Query("select * from downloaddb order by updatedDate")
     fun getDownloads(): LiveData<List<DownloadDB>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

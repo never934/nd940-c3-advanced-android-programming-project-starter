@@ -7,5 +7,5 @@ import dagger.Component
 @EnvScope
 @Component(dependencies = [AndroidComponent::class], modules = [RoomModule::class])
 interface RoomComponent {
-    val asteroidsDao: DownloadsDao
+    val downloadsDao: DownloadsDao
 }

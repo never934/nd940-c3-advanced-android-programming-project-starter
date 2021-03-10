@@ -9,10 +9,14 @@ import android.os.IBinder
 import com.udacity.base.BaseService
 import com.udacity.Constants
 import com.udacity.R
+import com.udacity.db.entity.DownloadDB
 import com.udacity.impl.DownloadImpl
+import com.udacity.repository.DownloadsRepository
+import com.udacity.util.TimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 
 class DownloadService : BaseService() {
@@ -20,6 +24,7 @@ class DownloadService : BaseService() {
     private val binder: IBinder = DownloadBinder(this)
     private var callback: DownloadImpl? = null
     private var url: String? = null
+    private val repository: DownloadsRepository = DownloadsRepository()
 
     override fun onBind(intent: Intent?): IBinder {
         return binder
@@ -48,9 +53,8 @@ class DownloadService : BaseService() {
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         val downloadId = downloadManager.enqueue(request)
-
         var downloading = true
-
+        saveDownload(downloadId)
         while (downloading) {
             val q = DownloadManager.Query()
             q.setFilterById(downloadId)
@@ -64,6 +68,10 @@ class DownloadService : BaseService() {
                 cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
             if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_SUCCESSFUL) {
                 downloading = false
+                updateDownload(downloadId, true)
+            }else if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_FAILED){
+                downloading = false
+                updateDownload(downloadId, false)
             }
             if (bytesTotal != 0) {
                 val progress = ((bytesDownloaded * 100L) / bytesTotal).toInt()
@@ -72,6 +80,30 @@ class DownloadService : BaseService() {
                 }
             }
             cursor.close()
+        }
+    }
+
+    private suspend fun saveDownload(downloadId: Long){
+        withContext(Dispatchers.IO){
+            val time = TimeUtils.getCurrentUnixTime()
+            repository.saveDownload(DownloadDB(
+                id = UUID.randomUUID().toString(),
+                downloadId = downloadId,
+                downloadUrl = url ?: "",
+                downloaded = null,
+                createdDate = time,
+                updatedDate = time
+            ))
+        }
+    }
+
+    private suspend fun updateDownload(downloadId: Long, downloaded: Boolean){
+        withContext(Dispatchers.IO){
+            val download = repository.downloads.value?.first { it.downloadId == downloadId }
+            val time = TimeUtils.getCurrentUnixTime()
+            download?.downloaded = downloaded
+            download?.updatedDate = time
+            repository.updateDownload(download)
         }
     }
 
