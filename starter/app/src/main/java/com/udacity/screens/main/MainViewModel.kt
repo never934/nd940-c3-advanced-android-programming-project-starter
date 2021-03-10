@@ -31,8 +31,10 @@ class MainViewModel : BaseViewModel(), DownloadImpl {
     get() = Transformations.map(_downloads){
         it.map { downloadDB ->  DownloadView(downloadDB) }
     }
-
     private var downloadUrl: String? = null
+    private var _eventShowChoseToast: MutableLiveData<Boolean> = MutableLiveData(false)
+    val eventShowChoseToast: LiveData<Boolean>
+    get() = _eventShowChoseToast
 
     // service
     private var boundDownloadService = false
@@ -62,6 +64,8 @@ class MainViewModel : BaseViewModel(), DownloadImpl {
             val videosIntent = Intent(App.androidComponent.context, DownloadService::class.java)
             videosIntent.putExtra(Constants.KEY_URL, downloadUrl)
             App.androidComponent.context.startService(videosIntent)
+        } ?: run {
+            _eventShowChoseToast.value = true
         }
     }
 
@@ -72,6 +76,10 @@ class MainViewModel : BaseViewModel(), DownloadImpl {
             R.id.courseRadio -> context.getString(R.string.course_url)
             else -> null
         }
+    }
+
+    fun choseToastShown(){
+        _eventShowChoseToast.value = false
     }
 
     override fun downloaded(percents: Int) {

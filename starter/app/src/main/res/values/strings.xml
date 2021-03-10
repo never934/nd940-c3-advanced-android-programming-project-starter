@@ -27,6 +27,7 @@
     <string name="glide">Glide</string>
     <string name="retrofit">Retrofit</string>
     <string name="udacity_course">Udacity course</string>
+    <string name="choose_file_desc">"Choose file to download"</string>
 
 
     <!-- urls !-->

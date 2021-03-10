@@ -2,6 +2,7 @@ package com.udacity.screens.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -29,6 +30,11 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.loadingPercents.observe(this, {
             binding.content.customButton.setProgress(it)
+        })
+        viewModel.eventShowChoseToast.observe(this, {
+            if (it) {
+                Toast.makeText(this, getString(R.string.choose_file_desc), Toast.LENGTH_SHORT).show()
+            }
         })
         initRecycler()
         initRadioChoosing()
