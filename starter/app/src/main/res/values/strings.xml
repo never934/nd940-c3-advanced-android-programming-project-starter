@@ -24,4 +24,14 @@
     <string name="fail">Fail</string>
     <string name="loading">Progress</string>
     <string name="detail">Detail</string>
+    <string name="glide">Glide</string>
+    <string name="retrofit">Retrofit</string>
+    <string name="udacity_course">Udacity course</string>
+
+
+    <!-- urls !-->
+    <string name="course_url">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter</string>
+    <string name="retrofit_url">https://github.com/square/retrofit</string>
+    <string name="glide_url">https://github.com/bumptech/glide</string>
+
 </resources>

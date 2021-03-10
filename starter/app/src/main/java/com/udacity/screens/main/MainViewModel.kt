@@ -10,12 +10,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.udacity.App
 import com.udacity.Constants
+import com.udacity.R
 import com.udacity.base.BaseViewModel
 import com.udacity.db.entity.DownloadDB
 import com.udacity.db.view.DownloadView
 import com.udacity.impl.DownloadImpl
 import com.udacity.repository.DownloadsRepository
 import com.udacity.service.DownloadService
+import kotlinx.android.synthetic.main.content_main.view.*
 
 class MainViewModel : BaseViewModel(), DownloadImpl {
 
@@ -29,6 +31,8 @@ class MainViewModel : BaseViewModel(), DownloadImpl {
     get() = Transformations.map(_downloads){
         it.map { downloadDB ->  DownloadView(downloadDB) }
     }
+
+    private var downloadUrl: String? = null
 
     // service
     private var boundDownloadService = false
@@ -54,9 +58,20 @@ class MainViewModel : BaseViewModel(), DownloadImpl {
     }
 
     fun startDownload(){
-        val videosIntent = Intent(App.androidComponent.context, DownloadService::class.java)
-        videosIntent.putExtra(Constants.KEY_URL, MainActivity.URL)
-        App.androidComponent.context.startService(videosIntent)
+        downloadUrl?.let {
+            val videosIntent = Intent(App.androidComponent.context, DownloadService::class.java)
+            videosIntent.putExtra(Constants.KEY_URL, downloadUrl)
+            App.androidComponent.context.startService(videosIntent)
+        }
+    }
+
+    fun downloadChosen(id: Int){
+        downloadUrl = when(id){
+            R.id.glideRadio -> context.getString(R.string.glide_url)
+            R.id.retrofitRadio -> context.getString(R.string.retrofit_url)
+            R.id.courseRadio -> context.getString(R.string.course_url)
+            else -> null
+        }
     }
 
     override fun downloaded(percents: Int) {

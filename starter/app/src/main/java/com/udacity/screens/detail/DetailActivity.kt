@@ -19,9 +19,9 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(toolbar)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         binding.lifecycleOwner = this
+        setSupportActionBar(binding.toolbar)
         (intent.extras?.getLong(Constants.KEY_DOWNLOAD_ID))?.let {
             viewModel = ViewModelProvider(this, DetailViewModel.Factory(it)).get(DetailViewModel::class.java)
             binding.viewModel = viewModel
