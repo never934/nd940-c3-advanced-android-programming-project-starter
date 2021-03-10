@@ -64,8 +64,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@{download.downloaded ? @drawable/ic_check_24 : @drawable/ic_error_24}"
-                app:tint="@{download.downloaded ? @color/accept : @color/alert}" />
+                app:downloadStatus="@{download.downloaded}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

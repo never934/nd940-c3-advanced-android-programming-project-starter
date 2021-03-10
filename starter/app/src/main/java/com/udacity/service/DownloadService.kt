@@ -6,6 +6,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log
+import androidx.lifecycle.switchMap
 import com.udacity.base.BaseService
 import com.udacity.Constants
 import com.udacity.R
@@ -99,11 +101,11 @@ class DownloadService : BaseService() {
 
     private suspend fun updateDownload(downloadId: Long, downloaded: Boolean){
         withContext(Dispatchers.IO){
-            val download = repository.downloads.value?.first { it.downloadId == downloadId }
+            val download = repository.getDownload(downloadId)
             val time = TimeUtils.getCurrentUnixTime()
             download?.downloaded = downloaded
             download?.updatedDate = time
-            repository.updateDownload(download)
+            repository.saveDownload(download)
         }
     }
 

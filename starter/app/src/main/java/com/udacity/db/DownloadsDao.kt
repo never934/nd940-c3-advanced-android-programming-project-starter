@@ -9,6 +9,9 @@ interface DownloadsDao {
     @Query("select * from downloaddb order by updatedDate")
     fun getDownloads(): LiveData<List<DownloadDB>>
 
+    @Query("select * from downloaddb where downloadId = :downloadId")
+    fun getDownloadByDownloadId(downloadId: Long): DownloadDB?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(download: DownloadDB)
 
