@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.udacity.adapter.diff.DownloadDiffCallback
 import com.udacity.databinding.ItemDownloadBinding
 import com.udacity.db.entity.DownloadDB
+import com.udacity.db.view.DownloadView
 import com.udacity.impl.DownloadListener
 
-class DownloadsAdapter(private val clickListener: DownloadListener) : ListAdapter<DownloadDB, DownloadsAdapter.ViewHolder>(DownloadDiffCallback()) {
+class DownloadsAdapter(private val clickListener: DownloadListener) : ListAdapter<DownloadView, DownloadsAdapter.ViewHolder>(DownloadDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(clickListener, getItem(position))
@@ -21,7 +22,7 @@ class DownloadsAdapter(private val clickListener: DownloadListener) : ListAdapte
 
     class ViewHolder(private val binding: ItemDownloadBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(clickListener: DownloadListener, item: DownloadDB) {
+        fun bind(clickListener: DownloadListener, item: DownloadView) {
             binding.clicklistener = clickListener
             binding.download = item
             binding.executePendingBindings()

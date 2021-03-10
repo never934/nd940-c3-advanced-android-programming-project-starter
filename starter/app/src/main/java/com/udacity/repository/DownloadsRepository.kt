@@ -6,7 +6,7 @@ import com.udacity.db.entity.DownloadDB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DownloadsRepository : BaseRepository(){
+class DownloadsRepository() : BaseRepository(){
 
     val downloads: LiveData<List<DownloadDB>> = room.downloadsDao.getDownloads()
 

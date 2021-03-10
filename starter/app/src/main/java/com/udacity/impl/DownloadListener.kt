@@ -1,7 +1,7 @@
 package com.udacity.impl
 
-import com.udacity.db.entity.DownloadDB
+import com.udacity.db.view.DownloadView
 
-class DownloadListener(val clickListener: (download: DownloadDB) -> Unit) {
-    fun onClick(download: DownloadDB) = clickListener(download)
+class DownloadListener(val clickListener: (download: DownloadView) -> Unit) {
+    fun onClick(download: DownloadView) = clickListener(download)
 }

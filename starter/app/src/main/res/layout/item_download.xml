@@ -4,7 +4,7 @@
     <data>
         <variable
             name="download"
-            type="com.udacity.db.entity.DownloadDB" />
+            type="com.udacity.db.view.DownloadView" />
         <variable
             name="clicklistener"
             type="com.udacity.impl.DownloadListener" />
@@ -20,41 +20,42 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/small_margin"
-            android:layout_marginHorizontal="@dimen/normal_margin">
+            android:layout_marginVertical="@dimen/normal_margin">
 
-            <TextView
-                android:id="@+id/downloadId"
-                style="@style/default_text"
+            <com.udacity.customview.ViewField
+                android:id="@+id/id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:hint="@string/id_hint"
+                app:content="@{download.downloadId.toString()}"
                 android:layout_marginEnd="@dimen/normal_margin"
-                android:text="@{download.id}"
                 app:layout_constraintEnd_toStartOf="@+id/imageView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
+            <com.udacity.customview.ViewField
                 android:id="@+id/url"
-                style="@style/default_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:hint="@string/url_hint"
+                app:content="@{download.downloadUrl}"
+                android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/normal_margin"
-                android:text="@{download.downloadUrl}"
                 app:layout_constraintEnd_toStartOf="@+id/imageView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/downloadId" />
+                app:layout_constraintTop_toBottomOf="@id/id"/>
 
-            <TextView
+            <com.udacity.customview.ViewField
                 android:id="@+id/date"
-                style="@style/default_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:hint="@string/created_date_hint"
+                app:content="@{download.createdDate}"
+                android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/normal_margin"
-                app:date="@{download.createdDate}"
                 app:layout_constraintEnd_toStartOf="@+id/imageView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/url" />
+                app:layout_constraintTop_toBottomOf="@id/url"/>
 
             <ImageView
                 android:id="@+id/imageView"
@@ -64,7 +65,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:downloadStatus="@{download.downloaded}"/>
+                app:srcId="@{download.statusIconId}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

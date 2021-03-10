@@ -69,11 +69,11 @@ class DownloadService : BaseService() {
             val bytesTotal: Int =
                 cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
             if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_SUCCESSFUL) {
-                downloading = false
                 updateDownload(downloadId, true)
-            }else if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_FAILED){
                 downloading = false
+            }else if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_FAILED){
                 updateDownload(downloadId, false)
+                downloading = false
             }
             if (bytesTotal != 0) {
                 val progress = ((bytesDownloaded * 100L) / bytesTotal).toInt()

@@ -7,10 +7,12 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.udacity.App
 import com.udacity.Constants
 import com.udacity.base.BaseViewModel
 import com.udacity.db.entity.DownloadDB
+import com.udacity.db.view.DownloadView
 import com.udacity.impl.DownloadImpl
 import com.udacity.repository.DownloadsRepository
 import com.udacity.service.DownloadService
@@ -22,7 +24,11 @@ class MainViewModel : BaseViewModel(), DownloadImpl {
     get() = _loadingPercents
 
     private var repository = DownloadsRepository()
-    val downloads: LiveData<List<DownloadDB>> = repository.downloads
+    private val _downloads: LiveData<List<DownloadDB>> = repository.downloads
+    val downloads: LiveData<List<DownloadView>>
+    get() = Transformations.map(_downloads){
+        it.map { downloadDB ->  DownloadView(downloadDB) }
+    }
 
     // service
     private var boundDownloadService = false

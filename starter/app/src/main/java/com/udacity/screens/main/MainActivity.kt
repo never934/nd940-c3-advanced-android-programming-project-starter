@@ -16,6 +16,7 @@ import com.udacity.R
 import com.udacity.adapter.recycler.DownloadsAdapter
 import com.udacity.impl.DownloadImpl
 import com.udacity.impl.DownloadListener
+import com.udacity.screens.detail.DetailActivity
 import com.udacity.service.DownloadService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -39,7 +40,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecycler(){
         val adapter = DownloadsAdapter(DownloadListener {
-
+            it.downloadId?.let { downloadId ->
+                startDetailActivity(downloadId)
+            }
         })
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -50,6 +53,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.downloads.observe(this, {
             adapter.submitList(it.reversed())
         })
+    }
+
+    private fun startDetailActivity(downloadId: Long){
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(Constants.KEY_DOWNLOAD_ID, downloadId)
+        startActivity(intent)
     }
 
     companion object {

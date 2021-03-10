@@ -13,4 +13,15 @@
     <string name="button_name">Download</string>
     <string name="button_loading">Loading</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="ok">OK</string>
+
+    <string name="id_hint">id:</string>
+    <string name="url_hint">url:</string>
+    <string name="created_date_hint">created date:</string>
+    <string name="status_hint">status:</string>
+    <string name="download_time_hint">download time:</string>
+    <string name="success">Success</string>
+    <string name="fail">Fail</string>
+    <string name="loading">Progress</string>
+    <string name="detail">Detail</string>
 </resources>

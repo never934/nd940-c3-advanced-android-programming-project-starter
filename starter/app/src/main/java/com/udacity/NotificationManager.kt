@@ -2,30 +2,42 @@ package com.udacity
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.udacity.db.view.DownloadView
+import com.udacity.screens.detail.DetailActivity
 
 private val NOTIFICATION_ID = 0
 
-fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
+fun NotificationManager.sendNotification(downloadView: DownloadView, applicationContext: Context) {
+
     val channelName = applicationContext.getString(R.string.notification_channel_name)
     val channelId = applicationContext.getString(R.string.notification_channel_id)
     createChannel(channelId, channelName)
+
+    val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+    contentIntent.putExtra(Constants.KEY_DOWNLOAD_ID, downloadView.downloadId)
+    val contentPendingIntent = PendingIntent.getActivity(
+        applicationContext,
+        NOTIFICATION_ID,
+        contentIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
     val builder = NotificationCompat.Builder(
         applicationContext,
         applicationContext.getString(R.string.notification_channel_id)
     )
         .setSmallIcon(android.R.drawable.stat_sys_download_done)
         .setContentTitle(applicationContext.getString(R.string.notification_title))
-        .setContentText(messageBody)
+        .setContentText("id: ${downloadView.downloadId}\nstatus changed")
+        .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)
     notify(NOTIFICATION_ID, builder.build())
-}
-
-fun NotificationManager.cancelNotifications() {
-    cancelAll()
 }
 
 private fun NotificationManager.createChannel(channelId: String, channelName: String) {
