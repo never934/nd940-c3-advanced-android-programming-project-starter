@@ -2,12 +2,16 @@ package com.udacity.customview
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
 import com.udacity.R
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -27,9 +31,21 @@ class LoadingButton @JvmOverloads constructor(
         isClickable = new != ButtonState.Loading
     }
     private var valueAnimator: ValueAnimator? = null
+    private var textColor: Int = android.R.color.white
+    private var backgroundColorResource: Int = R.color.colorPrimary
 
-    init {
-        isClickable = true
+    init{
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton)
+        val backgroundColor = ta.getColor(R.styleable.LoadingButton_loading_button_background_color, 0)
+        val textColor = ta.getColor(R.styleable.LoadingButton_loading_button_text_color,0)
+        try {
+            this.textColor = textColor
+            this.backgroundColorResource = backgroundColor
+            isClickable = true
+        } finally {
+            ta.recycle()
+            invalidate()
+        }
     }
 
 
@@ -43,7 +59,6 @@ class LoadingButton @JvmOverloads constructor(
                 drawText(canvas, context.getString(R.string.button_loading))
             }
             ButtonState.Completed -> {
-                paint.color = Color.WHITE
                 drawText(canvas, context.getString(R.string.button_name))
             }
             else -> {}
@@ -70,7 +85,7 @@ class LoadingButton @JvmOverloads constructor(
 
     private fun drawText(canvas: Canvas?, text: String?){
         text?.let {
-            paint.color = Color.WHITE
+            paint.color = textColor
             paint.textSize = height/2.toFloat()
             val yPos = (height / 2 - (paint.descent() + paint.ascent()) / 2)
             canvas?.drawText(text, (width / 2).toFloat(), yPos, paint)
@@ -78,7 +93,7 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     private fun drawDefault(canvas: Canvas?){
-        paint.color = context.getColor(R.color.colorPrimary)
+        paint.color = backgroundColorResource
         canvas?.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
